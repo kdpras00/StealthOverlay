@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stealth Overlay AI — Project Settings</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .settings-container {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 20px;
+    }
+    .header-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-title p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .version-tag {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .settings-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #334155;
+      gap: 16px;
+    }
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+    .setting-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 2px;
+    }
+    .setting-info p {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    .input-control {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    select, input[type="text"], input[type="password"], input[type="number"] {
+      padding: 8px 12px;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #f8fafc;
+      background: #0f172a;
+      outline: none;
+      transition: all 0.15s;
+    }
+    select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    select {
+      min-width: 190px;
+      cursor: pointer;
+    }
+    input[type="text"], input[type="password"] {
+      width: 250px;
+    }
+    input[type="number"] {
+      width: 90px;
+    }
+    .input-with-eye {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .eye-btn {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    .eye-btn:hover {
+      color: #f8fafc;
+    }
+
+    /* Switch styling */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #475569;
+      transition: .2s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    input:checked + .slider {
+      background-color: #3b82f6;
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Connection Test Button & Status */
+    .btn-test {
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-test:hover {
+      background: #475569;
+    }
+    .status-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-badge.connected {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-badge.standalone {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .status-badge.disabled {
+      background: rgba(100, 116, 139, 0.15);
+      color: #64748b;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+
+    /* Shortcut badge */
+    .shortcut-badge {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    /* Action buttons */
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .btn-save {
+      flex: 1;
+      background: #3b82f6;
+      color: #ffffff;
+      border: none;
+      padding: 13px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+    .btn-save:hover {
+      background: #2563eb;
+    }
+    .btn-reset {
+      flex: 1;
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      padding: 13px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-reset:hover {
+      background: #334155;
+      color: #f8fafc;
+    }
+    .footer-text {
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 10px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="header-title">
+        <h1>Stealth Overlay Settings</h1>
+        <p>Manage AI Provider, Voice Copilot, Overlay Aesthetics & Desktop Sync</p>
+      </div>
+      <span class="version-tag">v4.0.0</span>
+    </div>
+
+    <!-- SECTION 1: API & AI CONFIGURATION (Retained & Enhanced) -->
+    <div>
+      <div class="section-title">API & AI CONFIGURATION</div>
+      <div class="settings-card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>API Provider</h4>
+            <p>Select your primary AI service provider or local endpoint</p>
+          </div>
+          <div class="input-control">
+            <select id="apiProvider">
+              <option value="groq">Groq Cloud (https://api.groq.com/openai/v1)</option>
+              <option value="openai">OpenAI (https://api.openai.com/v1)</option>
+              <option value="gemini">Google Gemini API (https://generativelanguage.googleapis.com)</option>
+              <option value="anthropic">Anthropic Claude API (https://api.anthropic.com/v1)</option>
+              <option value="ollama">Ollama Local (http://localhost:11434/v1)</option>
+              <option value="custom">Custom Endpoint</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>API Base URL</h4>
+            <p>Auto-filled endpoint for your selected provider</p>
+          </div>
+          <div class="input-control">
+            <input type="text" id="apiBaseUrl" value="https://api.groq.com/openai/v1">
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>API Key</h4>
+            <p>Enter your secret API key (Optional for local servers)</p>
+          </div>
+          <div class="input-control">
+            <div class="input-with-eye">
+              <input type="password" id="apiKey" placeholder="Paste your API key here...">
+              <button type="button" class="eye-btn" id="toggleApiKey" title="Toggle visibility">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>AI Model</h4>
+            <p>Select default AI model preset</p>
+          </div>
+          <div class="input-control">
+            <select id="aiModel">
+              <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Groq Default)</option>
+              <option value="gemini-2.0-flash">gemini-2.0-flash (Gemini Default)</option>
+              <option value="gpt-4o">gpt-4o (OpenAI Default)</option>
+              <option value="gpt-4o-mini">gpt-4o-mini (OpenAI Fast)</option>
+              <option value="claude-3-5-sonnet-20241022">claude-3-5-sonnet-20241022 (Claude)</option>
+              <option value="llama3.2">llama3.2 (Ollama Local)</option>
+              <option value="custom">Custom Model Name</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-row" id="customModelRow" style="display: none;">
+          <div class="setting-info">
+            <h4>Custom Model Name</h4>
+            <p>Specify exact model ID string if Custom Model selected</p>
+          </div>
+          <div class="input-control">
+            <input type="text" id="customModel" value="llama-3.3-70b-versatile">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: OVERLAY & STEALTH APPEARANCE (Tailored to StealthOverlay) -->
+    <div>
+      <div class="section-title">OVERLAY & STEALTH APPEARANCE</div>
+      <div class="settings-card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Overlay Opacity</h4>
+            <p>Background transparency of floating capsule & answer card</p>
+          </div>
+          <div class="input-control">
+            <select id="overlayOpacity">
+              <option value="0.8">80% Translucent (Default)</option>
+              <option value="0.9">90% Semi-Solid</option>
+              <option value="1.0">100% Solid Dark</option>
+              <option value="0.7">70% Extra Transparent</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Default Container Width</h4>
+            <p>Standard width of top capsule & floating answer card</p>
+          </div>
+          <div class="input-control">
+            <select id="overlayWidth">
+              <option value="740">740px Balanced (Default)</option>
+              <option value="640">640px Compact</option>
+              <option value="840">840px Widescreen</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Stealth Defense Mode</h4>
+            <p>Prevent webpage scripts or canvas inspectors from detecting overlay DOM</p>
+          </div>
+          <div class="input-control">
+            <label class="switch">
+              <input type="checkbox" id="stealthDefense" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Glassmorphism Backdrop Blur</h4>
+            <p>Enable modern blurred background effect for overlay container</p>
+          </div>
+          <div class="input-control">
+            <label class="switch">
+              <input type="checkbox" id="backdropBlur" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: VOICE & SPEECH COPILOT (Tailored to StealthOverlay Voice) -->
+    <div>
+      <div class="section-title">VOICE & SPEECH COPILOT</div>
+      <div class="settings-card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Speech Recognition Language</h4>
+            <p>Target spoken language for real-time transcription</p>
+          </div>
+          <div class="input-control">
+            <select id="speechLang">
+              <option value="id-ID" selected>Bahasa Indonesia</option>
+              <option value="en-US">English (US)</option>
+              <option value="en-GB">English (UK)</option>
+              <option value="auto">Auto-detect (System Language)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Auto-start Mic Listening</h4>
+            <p>Automatically activate microphone listening when overlay opens</p>
+          </div>
+          <div class="input-control">
+            <label class="switch">
+              <input type="checkbox" id="autoStartMic" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Max Transcription Chips</h4>
+            <p>Maximum live word chips rendered in the middle transcription bar</p>
+          </div>
+          <div class="input-control">
+            <input type="number" id="maxWordChips" min="3" max="20" value="6">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: DESKTOP APP INTEGRATION (Bridge to StealthOverlay App) -->
+    <div>
+      <div class="section-title">DESKTOP APP INTEGRATION BRIDGE (OPTIONAL SYNC)</div>
+      <div class="settings-card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Desktop Server Endpoint</h4>
+            <p>Local HTTP URL of StealthOverlay Flutter/Python Desktop App</p>
+          </div>
+          <div class="input-control">
+            <input type="text" id="desktopEndpoint" value="http://127.0.0.1:8765">
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Sync Notes & Transcripts</h4>
+            <p>Automatically relay voice transcripts and Q&A answers to desktop app</p>
+          </div>
+          <div class="input-control">
+            <label class="switch">
+              <input type="checkbox" id="syncDesktop" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Connection Health Status</h4>
+            <p>Check if desktop bridge application is online</p>
+          </div>
+          <div class="input-control">
+            <span class="status-badge standalone" id="connectionBadge">● Standalone Active (App Not Running)</span>
+            <button type="button" class="btn-test" id="testConnBtn">Test Ping</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: KEYBOARD SHORTCUTS -->
+    <div>
+      <div class="section-title">KEYBOARD SHORTCUTS</div>
+      <div class="settings-card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Answer Mode / AI Generation</h4>
+          </div>
+          <span class="shortcut-badge">⌘ ↵ / Alt + A</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Instant Screenshot Capture</h4>
+          </div>
+          <span class="shortcut-badge">⌘ S / Alt + S</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Chat Mode Input</h4>
+          </div>
+          <span class="shortcut-badge">⌘ K / Alt + C</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Clear Chips & Answer Cards</h4>
+          </div>
+          <span class="shortcut-badge">⌘ Del / Esc</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Navigate History Answers</h4>
+          </div>
+          <span class="shortcut-badge">⌘ ← / ⌘ →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="action-row">
+      <button class="btn-save" id="saveBtn">Save All Settings</button>
+      <button class="btn-reset" id="resetBtn">Reset Defaults</button>
+    </div>
+
+    <div class="footer-text">Stealth Overlay AI Bridge v4.0.0 · Designed for Technical Interview Copilot</div>
+  </div>
+
+  <div class="toast" id="toast">Settings saved successfully!</div>
+
+  <script src="options.js"></script>
+</body>
+</html>
