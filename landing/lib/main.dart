@@ -164,15 +164,9 @@ class _LandingScreenState extends State<LandingScreen> {
   VoidCallback get _primaryDownloadAction {
     switch (_detectedOS) {
       case UserOS.windows:
-        return () => _showBuildGuideDialog(
-              'Windows',
-              'flutter pub get\nflutter build windows --release',
-            );
+        return () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip');
       case UserOS.linux:
-        return () => _showBuildGuideDialog(
-              'Linux',
-              'sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev\nflutter pub get\nflutter build linux --release',
-            );
+        return () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz');
       case UserOS.macOS:
         return () => _launchDownloadUrl('dist/macos/WhisperCue-macOS.dmg');
     }
@@ -526,10 +520,7 @@ class _LandingScreenState extends State<LandingScreen> {
     }
 
     Widget windowsButton({bool isPrimary = false}) {
-      final action = () => _showBuildGuideDialog(
-            'Windows',
-            'flutter pub get\nflutter build windows --release',
-          );
+      final action = () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip');
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
@@ -573,10 +564,7 @@ class _LandingScreenState extends State<LandingScreen> {
     }
 
     Widget linuxButton({bool isPrimary = false}) {
-      final action = () => _showBuildGuideDialog(
-            'Linux',
-            'sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev\nflutter pub get\nflutter build linux --release',
-          );
+      final action = () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz');
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
@@ -913,11 +901,8 @@ class _LandingScreenState extends State<LandingScreen> {
                 '🪟',
                 'Windows',
                 'Windows 10 & 11 (64-bit)',
-                'Windows Build Guide',
-                () => _showBuildGuideDialog(
-                  'Windows',
-                  'flutter pub get\nflutter build windows --release',
-                ),
+                'Download Windows',
+                () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip'),
                 isPrimary: os == UserOS.windows,
               ),
               const SizedBox(width: 24, height: 24),
@@ -925,11 +910,8 @@ class _LandingScreenState extends State<LandingScreen> {
                 '🐧',
                 'Linux',
                 'Ubuntu / Debian / Arch',
-                'Linux Build Guide',
-                () => _showBuildGuideDialog(
-                  'Linux',
-                  'sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev\nflutter pub get\nflutter build linux --release',
-                ),
+                'Download Linux',
+                () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz'),
                 isPrimary: os == UserOS.linux,
               ),
             ],
