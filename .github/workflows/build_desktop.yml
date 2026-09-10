@@ -59,7 +59,7 @@ jobs:
 
       - name: Compress macOS Artifact
         if: matrix.target == 'macOS'
-        run: zip -r WhisperCue-macOS.zip build/macos/Build/Products/Release/whisper_cue.app
+        run: zip -r WhisperCue-macOS.zip build/macos/Build/Products/Release/*.app
 
       - name: Compress Windows Artifact
         if: matrix.target == 'Windows'
