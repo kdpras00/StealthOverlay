@@ -6,28 +6,35 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - target: macOS
             os: macos-latest
             cmd: flutter build macos --release
             output: build/macos/Build/Products/Release/whisper_cue.app
-            artifact_name: whisper_cue-macOS
+            archive: WhisperCue-macOS.zip
+            asset_name: WhisperCue-macOS.zip
           - target: Windows
             os: windows-latest
             cmd: flutter build windows --release
             output: build/windows/x64/runner/Release
-            artifact_name: whisper_cue-Windows
+            archive: WhisperCue-Windows.zip
+            asset_name: WhisperCue-Windows.zip
           - target: Linux
             os: ubuntu-latest
             cmd: flutter build linux --release
             output: build/linux/x64/release/bundle
-            artifact_name: whisper_cue-Linux
+            archive: WhisperCue-Linux.tar.gz
+            asset_name: WhisperCue-Linux.tar.gz
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +43,7 @@ jobs:
         if: matrix.target == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libkeybinder-3.0-dev
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -50,8 +57,28 @@ jobs:
       - name: Build Desktop App
         run: ${{ matrix.cmd }}
 
+      - name: Compress macOS Artifact
+        if: matrix.target == 'macOS'
+        run: zip -r WhisperCue-macOS.zip build/macos/Build/Products/Release/whisper_cue.app
+
+      - name: Compress Windows Artifact
+        if: matrix.target == 'Windows'
+        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath WhisperCue-Windows.zip
+
+      - name: Compress Linux Artifact
+        if: matrix.target == 'Linux'
+        run: tar -czvf WhisperCue-Linux.tar.gz -C build/linux/x64/release/bundle .
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: ${{ matrix.output }}
+          name: ${{ matrix.asset_name }}
+          path: ${{ matrix.archive }}
+
+      - name: Create GitHub Release Asset
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.archive }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
