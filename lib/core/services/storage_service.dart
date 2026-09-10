@@ -44,7 +44,11 @@ class StorageService {
     if (jsonStr != null) {
       try {
         final Map<String, dynamic> data = jsonDecode(jsonStr);
-        return AppSettings.fromJson(data);
+        final settings = AppSettings.fromJson(data);
+        if (settings.aiModel == 'llama3-8b-8192' || settings.aiModel == 'llama3-70b-8192' || settings.aiModel == 'llama-3.3-70b-versatile' || settings.aiModel.isEmpty) {
+          settings.aiModel = 'openai/gpt-oss-120b';
+        }
+        return settings;
       } catch (_) {}
     }
     return AppSettings();

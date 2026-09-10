@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 
 typedef OnIncomingNoteCallback = void Function(String title, String content);
 typedef OnVisibilityToggledCallback = void Function(bool visible);
+typedef OnTranscriptCallback = void Function(
+    String text, String source, String lang);
 
 class BrowserBridgeService {
   HttpServer? _server;
@@ -19,6 +21,7 @@ class BrowserBridgeService {
     int port = 8765,
     OnIncomingNoteCallback? onNoteReceived,
     OnVisibilityToggledCallback? onVisibilityToggled,
+    OnTranscriptCallback? onTranscriptReceived,
     bool initialVisible = true,
   }) async {
     if (kIsWeb) return;
@@ -78,6 +81,24 @@ class BrowserBridgeService {
 
             request.response.statusCode = HttpStatus.ok;
             request.response.write(jsonEncode({'status': 'success', 'message': 'Note received'}));
+          } catch (e) {
+            request.response.statusCode = HttpStatus.badRequest;
+            request.response.write(jsonEncode({'status': 'error', 'message': e.toString()}));
+          }
+        } else if (request.method == 'POST' && (request.uri.path == '/api/transcript' || request.uri.path == '/api/transcript/')) {
+          try {
+            final String body = await utf8.decoder.bind(request).join();
+            final Map<String, dynamic> data = jsonDecode(body);
+            final String text = data['text'] as String? ?? '';
+            final String source = data['source'] as String? ?? 'tab_capture';
+            final String lang = data['lang'] as String? ?? 'id-ID';
+
+            if (onTranscriptReceived != null && text.isNotEmpty) {
+              onTranscriptReceived(text, source, lang);
+            }
+
+            request.response.statusCode = HttpStatus.ok;
+            request.response.write(jsonEncode({'status': 'success', 'message': 'Transcript received'}));
           } catch (e) {
             request.response.statusCode = HttpStatus.badRequest;
             request.response.write(jsonEncode({'status': 'error', 'message': e.toString()}));

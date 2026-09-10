@@ -83,4 +83,12 @@ class WindowService {
       return true;
     }
   }
+
+  static Future<void> setWindowSize(double width, double height) async {
+    if (kIsWeb) return;
+    try {
+      final currentSize = await windowManager.getSize();
+      await windowManager.setSize(Size(currentSize.width, height));
+    } catch (_) {}
+  }
 }

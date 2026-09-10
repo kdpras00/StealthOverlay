@@ -1,0 +1,43 @@
+name: whisper_cue_landing
+description: "WhisperCue Official Web Landing Page built with Flutter."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  url_launcher: ^6.3.1
+  video_player: ^2.9.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/videos/
+
+  fonts:
+    - family: Graphik
+      fonts:
+        - asset: assets/fonts/Graphik-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Graphik-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Graphik-Bold.otf
+          weight: 700
+    - family: Deacon
+      fonts:
+        - asset: assets/fonts/Deacon-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Deacon-Bold.otf
+          weight: 700
