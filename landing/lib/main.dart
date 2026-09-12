@@ -168,11 +168,11 @@ class _LandingScreenState extends State<LandingScreen> {
   VoidCallback get _primaryDownloadAction {
     switch (_detectedOS) {
       case UserOS.windows:
-        return () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Windows.zip');
+        return () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip');
       case UserOS.linux:
-        return () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Linux.tar.gz');
+        return () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz');
       case UserOS.macOS:
-        return () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip');
+        return () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip');
     }
   }
 
@@ -503,7 +503,7 @@ class _LandingScreenState extends State<LandingScreen> {
     Widget macButton({bool isPrimary = false}) {
       if (isPrimary) {
         return ElevatedButton.icon(
-          onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip'),
+          onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip'),
           icon: _platformIcon('assets/icons/mac-os-logo.webp', 20, onGreen: true),
           label: Text(
             'Download macOS',
@@ -523,7 +523,7 @@ class _LandingScreenState extends State<LandingScreen> {
         );
       }
       return OutlinedButton.icon(
-        onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip'),
+        onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip'),
         icon: _platformIcon('assets/icons/mac-os-logo.webp', 20, onGreen: false),
         label: Text(
           'Download macOS',
@@ -545,7 +545,7 @@ class _LandingScreenState extends State<LandingScreen> {
     }
 
     Widget windowsButton({bool isPrimary = false}) {
-      final action = () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Windows.zip');
+      final action = () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip');
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
@@ -590,7 +590,7 @@ class _LandingScreenState extends State<LandingScreen> {
     }
 
     Widget linuxButton({bool isPrimary = false}) {
-      final action = () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Linux.tar.gz');
+      final action = () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz');
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
@@ -920,7 +920,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 'macOS',
                 'macOS 11+ (Intel & Apple Silicon)',
                 'Download macOS',
-                () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip'),
+                () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip'),
                 isPrimary: os == UserOS.macOS,
               ),
               const SizedBox(width: 24, height: 24),
@@ -929,7 +929,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 'Windows',
                 'Windows 10 & 11 (64-bit)',
                 'Download Windows',
-                () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Windows.zip'),
+                () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip'),
                 isPrimary: os == UserOS.windows,
               ),
               const SizedBox(width: 24, height: 24),
@@ -938,7 +938,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 'Linux',
                 'Ubuntu / Debian / Arch',
                 'Download Linux',
-                () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Linux.tar.gz'),
+                () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz'),
                 isPrimary: os == UserOS.linux,
               ),
             ],
