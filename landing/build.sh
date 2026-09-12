@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Fix git safe directory ownership issue in CI containers (prevents exit code 128)
+# Fix git safe directory ownership issue in CI containers
 git config --global --add safe.directory '*' || true
 
 # Install Flutter SDK on Vercel build environment if not cached
@@ -16,5 +16,5 @@ flutter config --no-analytics
 echo "=== Flutter Version ==="
 flutter --version
 
-echo "=== Building Flutter Web ==="
-flutter build web --release
+echo "=== Building Flutter Web (PWA Service Worker Disabled for 206 Video Streaming) ==="
+flutter build web --release --pwa-strategy=none
