@@ -21,10 +21,15 @@ jobs:
       - run: flutter pub get
       - run: flutter build macos --release
       - run: ditto -c -k --sequesterRsrc --keepParent build/macos/Build/Products/Release/WhisperCue.app WhisperCue-macOS.zip
+      - run: bash scripts/build_macos_dmg.sh build/macos/Build/Products/Release/WhisperCue.app WhisperCue-macOS.dmg
       - uses: actions/upload-artifact@v4
         with:
           name: WhisperCue-macOS.zip
           path: WhisperCue-macOS.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WhisperCue-macOS.dmg
+          path: WhisperCue-macOS.dmg
 
   build-windows:
     runs-on: windows-latest
@@ -72,11 +77,12 @@ jobs:
         with:
           path: release
           merge-multiple: true
-      - run: cd release && sha256sum WhisperCue-macOS.zip WhisperCue-Windows.zip WhisperCue-Linux.tar.gz > SHA256SUMS.txt
+      - run: cd release && sha256sum WhisperCue-macOS.zip WhisperCue-macOS.dmg WhisperCue-Windows.zip WhisperCue-Linux.tar.gz > SHA256SUMS.txt
       - uses: softprops/action-gh-release@v2
         with:
           files: |
             release/WhisperCue-macOS.zip
+            release/WhisperCue-macOS.dmg
             release/WhisperCue-Windows.zip
             release/WhisperCue-Linux.tar.gz
             release/SHA256SUMS.txt

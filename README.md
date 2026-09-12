@@ -26,9 +26,8 @@ A high-performance AI desktop assistant application designed to display real-tim
 
 [![Download macOS Zip](https://img.shields.io/badge/Direct_Download-macOS_.zip-black?style=flat-square&logo=apple)](https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip)
 
-1. Download **[`WhisperCue-macOS.zip`](https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip)** (or `WhisperCue-macOS.dmg`).
-2. Extract the archive to locate `WhisperCue.app`.
-3. Move `WhisperCue.app` to your `/Applications` directory.
+1. Download **[`WhisperCue-macOS.dmg`](https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.dmg)** (or `WhisperCue-macOS.zip`).
+2. Open the DMG and **drag `WhisperCue.app` onto Applications** (or extract the ZIP and move `WhisperCue.app` to `/Applications`).
 4. **Launching the App** (unsigned build → Gatekeeper warning is expected):
    - Right-click `WhisperCue.app`, select **Open**, and confirm **Open**.
    - Alternatively, navigate to **System Settings > Privacy & Security > Security** and click **Open Anyway**.
