@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -56,7 +57,7 @@ class WhisperCueLandingApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF06090E),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF55DD4A),
+          primary: Color(0xFF00CC8E),
           onPrimary: Color(0xFF0A1A08),
           secondary: Color(0xFF73D3EB),
           surface: Color(0xFF101722),
@@ -209,7 +210,7 @@ class _LandingScreenState extends State<LandingScreen> {
         backgroundColor: const Color(0xFF101722),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: Color(0xFF55DD4A)),
+          side: const BorderSide(color: Color(0xFF00CC8E)),
         ),
         title: Text(
           '$platformName Setup & Build Guide',
@@ -246,7 +247,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   style: const TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 13,
-                    color: Color(0xFF55DD4A),
+                    color: Color(0xFF00CC8E),
                   ),
                 ),
               ),
@@ -267,7 +268,7 @@ class _LandingScreenState extends State<LandingScreen> {
             child: Text(
               'Close',
               style: WhisperCueLandingApp.graphikStyle(
-                color: const Color(0xFF55DD4A),
+                color: const Color(0xFF00CC8E),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -303,33 +304,86 @@ class _LandingScreenState extends State<LandingScreen> {
             physics: const ClampingScrollPhysics(),
             child: Column(
               children: [
-                const SizedBox(height: 100),
-
-                // Hero Section
+                // Hero Section (starts directly under the sticky navbar)
                 RepaintBoundary(
                   child: _buildHeroSection(isMobile),
                 ),
 
-                const SizedBox(height: 80),
-
-                // Interactive App Showcase Demo Frame
-                RepaintBoundary(
-                  child: _buildShowcaseFrame(isMobile),
+                // Interactive App Showcase Demo Frame — own distinct section band
+                Container(
+                  width: double.infinity,
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 80),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF090D13),
+                    border: Border(
+                      top: BorderSide(color: Color(0x1FFFFFFF)),
+                      bottom: BorderSide(color: Color(0x1FFFFFFF)),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RepaintBoundary(
+                        child: _buildShowcaseFrame(isMobile),
+                      ),
+                    ],
+                  ),
                 ),
 
-                const SizedBox(height: 100),
+                const SizedBox(height: 80),
 
-                // Features Section
+                // Features Section (Independent section with background.svg & smooth gradient fade)
                 RepaintBoundary(
                   child: Container(
                     key: _featuresKey,
-                    child: _buildFeaturesSection(isMobile),
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        // Background SVG with subtle opacity
+                        Positioned.fill(
+                          child: Opacity(
+                            opacity: 0.15,
+                            child: SvgPicture.asset(
+                              'assets/images/background.svg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        // Soft top & bottom gradient fade to seamlessly merge with #06090E scaffold
+                        Positioned.fill(
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color(0xFF06090E),
+                                  Color(0x0006090E),
+                                  Color(0x0006090E),
+                                  Color(0xFF06090E),
+                                ],
+                                stops: [0.0, 0.2, 0.8, 1.0],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 90),
+                          child: Center(
+                            child: _buildFeaturesSection(isMobile),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 100),
 
-                // Download Section
+                // Download Section (Independent Section)
                 RepaintBoundary(
                   child: Container(
                     key: _downloadKey,
@@ -339,7 +393,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
                 const SizedBox(height: 100),
 
-                // Footer
+                // Footer (Sleek Minimalist Footer)
                 RepaintBoundary(
                   child: _buildFooter(),
                 ),
@@ -367,7 +421,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget _buildNavbar(bool isMobile) {
     return Container(
       height: 72,
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32),
       decoration: const BoxDecoration(
         color: Color(0xFF06090E),
         border: Border(
@@ -380,27 +434,21 @@ class _LandingScreenState extends State<LandingScreen> {
           Row(
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: isMobile ? 32 : 36,
+                height: isMobile ? 32 : 36,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: const DecorationImage(
                     image: AssetImage('assets/icons/logo.webp'),
                     fit: BoxFit.cover,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF55DD4A).withOpacity(0.3),
-                      blurRadius: 10,
-                    ),
-                  ],
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: isMobile ? 8 : 12),
               Text(
                 'WhisperCue',
                 style: WhisperCueLandingApp.deaconStyle(
-                  fontSize: 20,
+                  fontSize: isMobile ? 18 : 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -415,28 +463,143 @@ class _LandingScreenState extends State<LandingScreen> {
               ],
             ),
 
-          ElevatedButton.icon(
-            onPressed: _primaryDownloadAction,
-            icon: Image.asset(_primaryDownloadIconAsset, width: 18, height: 18),
-            label: Text(
-              _primaryDownloadLabel,
-              style: WhisperCueLandingApp.graphikStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: const Color(0xFF0A1A08),
+          if (!isMobile)
+            ElevatedButton.icon(
+              onPressed: _primaryDownloadAction,
+              icon: Image.asset(_primaryDownloadIconAsset, width: 18, height: 18),
+              label: Text(
+                _primaryDownloadLabel,
+                style: WhisperCueLandingApp.graphikStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: const Color(0xFF0A1A08),
+                ),
               ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF55DD4A),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00CC8E),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                shape: const StadiumBorder(),
+                elevation: 0,
               ),
-              elevation: 4,
+            )
+          else
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: _primaryDownloadAction,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00CC8E),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    minimumSize: const Size(0, 38),
+                    shape: const StadiumBorder(),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    'Get App',
+                    style: WhisperCueLandingApp.graphikStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: const Color(0xFF0A1A08),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.menu_rounded, color: Colors.white, size: 26),
+                  onPressed: () => _openMobileMenu(context),
+                  tooltip: 'Menu',
+                ),
+              ],
             ),
-          ),
         ],
       ),
+    );
+  }
+
+  void _openMobileMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF0A0F18),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/icons/logo.webp'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'WhisperCue',
+                          style: WhisperCueLandingApp.deaconStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, color: Colors.white70),
+                      onPressed: () => Navigator.pop(ctx),
+                    ),
+                  ],
+                ),
+                const Divider(color: Color(0x1FFFFFFF), height: 24),
+                ListTile(
+                  leading: const Icon(Icons.star_outline_rounded, color: Color(0xFF00CC8E)),
+                  title: Text(
+                    'Features',
+                    style: WhisperCueLandingApp.graphikStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _scrollToSection(_featuresKey);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.download_rounded, color: Color(0xFF00CC8E)),
+                  title: Text(
+                    'Download Options',
+                    style: WhisperCueLandingApp.graphikStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _scrollToSection(_downloadKey);
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -461,85 +624,112 @@ class _LandingScreenState extends State<LandingScreen> {
   // HERO SECTION
   // ---------------------------------------------------------------------------
   Widget _buildHeroSection(bool isMobile) {
+    final double viewportHeight = MediaQuery.of(context).size.height;
     return Container(
-      constraints: const BoxConstraints(maxWidth: 900),
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
+      width: double.infinity,
+      constraints: BoxConstraints(minHeight: isMobile ? 0 : viewportHeight),
+      child: Stack(
         children: [
-          const SizedBox(height: 20),
-
-          Text(
-            'Never Miss a Cue.\nCompletely Invisible.',
-            textAlign: TextAlign.center,
-            style: WhisperCueLandingApp.deaconStyle(
-              fontSize: isMobile ? 38 : 58,
-              fontWeight: FontWeight.bold,
-              height: 1.1,
-              letterSpacing: -1.5,
+          // Layered teal-wave backdrop with a uniform dark scrim,
+          // so the motif reads evenly across the whole section.
+          Positioned.fill(
+            child: SvgPicture.asset(
+              'assets/images/background.svg',
+              fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(height: 24),
-
-          Text(
-            'WhisperCue captures live meeting audio, transcribes it in real-time, and delivers instant AI answers in a stealth floating overlay hidden from Zoom, Meet, and Teams.',
-            textAlign: TextAlign.center,
-            style: WhisperCueLandingApp.graphikStyle(
-              fontSize: 18,
-              height: 1.6,
-              color: const Color(0xFF94A3B8),
+          Positioned.fill(
+            child: Container(
+              color: const Color(0x9906090E),
             ),
           ),
-          const SizedBox(height: 36),
+          Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 900),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24),
+              child: Column(
+                children: [
+                  SizedBox(height: isMobile ? 160 : 250),
 
-          _buildHeroDownloadButtons(),
+                  Text(
+                    'Never Miss a Cue.\nCompletely Invisible.',
+                    textAlign: TextAlign.center,
+                    style: WhisperCueLandingApp.deaconStyle(
+                      fontSize: isMobile ? 32 : 58,
+                      fontWeight: FontWeight.bold,
+                      height: 1.1,
+                      letterSpacing: isMobile ? -0.8 : -1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  Text(
+                    'WhisperCue captures live meeting audio, transcribes it in real-time, and delivers instant AI answers in a stealth floating overlay hidden from Zoom, Meet, and Teams.',
+                    textAlign: TextAlign.center,
+                    style: WhisperCueLandingApp.graphikStyle(
+                      fontSize: isMobile ? 15 : 18,
+                      height: 1.6,
+                      color: const Color(0xFF94A3B8),
+                    ),
+                  ),
+                  const SizedBox(height: 36),
+
+                  _buildHeroDownloadButtons(isMobile),
+                  SizedBox(height: isMobile ? 32 : 48),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildHeroDownloadButtons() {
+  Widget _buildHeroDownloadButtons(bool isMobile) {
     final os = _detectedOS;
+
+    final double horizPrimaryPad = isMobile ? 22 : 32;
+    final double horizSecondaryPad = isMobile ? 20 : 28;
+    final double vertPad = isMobile ? 14 : 22;
 
     Widget macButton({bool isPrimary = false}) {
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip'),
-          icon: _platformIcon('assets/icons/mac-os-logo.webp', 20, onGreen: true),
+          icon: _platformIcon('assets/icons/mac-os-logo.webp', 18, onGreen: true),
           label: Text(
             'Download macOS',
             style: WhisperCueLandingApp.graphikStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: isMobile ? 14 : 15,
               color: const Color(0xFF0A1A08),
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF55DD4A),
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-            ),
+            backgroundColor: const Color(0xFF00CC8E),
+            padding: EdgeInsets.symmetric(horizontal: horizPrimaryPad, vertical: vertPad),
+            shape: const StadiumBorder(),
+            elevation: 0,
           ),
         );
       }
       return OutlinedButton.icon(
         onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-macOS.zip'),
-        icon: _platformIcon('assets/icons/mac-os-logo.webp', 20, onGreen: false),
+        icon: _platformIcon('assets/icons/mac-os-logo.webp', 18, onGreen: false),
         label: Text(
           'Download macOS',
           style: WhisperCueLandingApp.graphikStyle(
             color: const Color(0xFFF3EDE4),
-            fontSize: 15,
+            fontSize: isMobile ? 14 : 15,
             fontWeight: FontWeight.w600,
           ),
         ),
         style: OutlinedButton.styleFrom(
           backgroundColor: const Color(0xFF101722),
           side: const BorderSide(color: Color(0x33FFFFFF)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: horizSecondaryPad, vertical: vertPad),
+          shape: const StadiumBorder(),
+          elevation: 0,
         ),
       );
     }
@@ -549,42 +739,40 @@ class _LandingScreenState extends State<LandingScreen> {
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
-          icon: _platformIcon('assets/icons/windows.webp', 20, onGreen: true),
+          icon: _platformIcon('assets/icons/windows.webp', 18, onGreen: true),
           label: Text(
             'Download Windows',
             style: WhisperCueLandingApp.graphikStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: isMobile ? 14 : 15,
               color: const Color(0xFF0A1A08),
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF55DD4A),
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-            ),
+            backgroundColor: const Color(0xFF00CC8E),
+            padding: EdgeInsets.symmetric(horizontal: horizPrimaryPad, vertical: vertPad),
+            shape: const StadiumBorder(),
+            elevation: 0,
           ),
         );
       }
       return OutlinedButton.icon(
         onPressed: action,
-        icon: _platformIcon('assets/icons/windows.webp', 20, onGreen: false),
+        icon: _platformIcon('assets/icons/windows.webp', 18, onGreen: false),
         label: Text(
           'Download Windows',
           style: WhisperCueLandingApp.graphikStyle(
             color: const Color(0xFFF3EDE4),
-            fontSize: 15,
+            fontSize: isMobile ? 14 : 15,
             fontWeight: FontWeight.w600,
           ),
         ),
         style: OutlinedButton.styleFrom(
           backgroundColor: const Color(0xFF101722),
           side: const BorderSide(color: Color(0x33FFFFFF)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: horizSecondaryPad, vertical: vertPad),
+          shape: const StadiumBorder(),
+          elevation: 0,
         ),
       );
     }
@@ -594,42 +782,40 @@ class _LandingScreenState extends State<LandingScreen> {
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
-          icon: _platformIcon('assets/icons/linux-platform.webp', 20, onGreen: true),
+          icon: _platformIcon('assets/icons/linux-platform.webp', 18, onGreen: true),
           label: Text(
             'Download Linux',
             style: WhisperCueLandingApp.graphikStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: isMobile ? 14 : 15,
               color: const Color(0xFF0A1A08),
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF55DD4A),
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-            ),
+            backgroundColor: const Color(0xFF00CC8E),
+            padding: EdgeInsets.symmetric(horizontal: horizPrimaryPad, vertical: vertPad),
+            shape: const StadiumBorder(),
+            elevation: 0,
           ),
         );
       }
       return OutlinedButton.icon(
         onPressed: action,
-        icon: _platformIcon('assets/icons/linux-platform.webp', 20, onGreen: false),
+        icon: _platformIcon('assets/icons/linux-platform.webp', 18, onGreen: false),
         label: Text(
           'Download Linux',
           style: WhisperCueLandingApp.graphikStyle(
             color: const Color(0xFFF3EDE4),
-            fontSize: 15,
+            fontSize: isMobile ? 14 : 15,
             fontWeight: FontWeight.w600,
           ),
         ),
         style: OutlinedButton.styleFrom(
           backgroundColor: const Color(0xFF101722),
           side: const BorderSide(color: Color(0x33FFFFFF)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: horizSecondaryPad, vertical: vertPad),
+          shape: const StadiumBorder(),
+          elevation: 0,
         ),
       );
     }
@@ -644,8 +830,8 @@ class _LandingScreenState extends State<LandingScreen> {
     }
 
     return Wrap(
-      spacing: 16,
-      runSpacing: 16,
+      spacing: isMobile ? 10 : 16,
+      runSpacing: isMobile ? 10 : 16,
       alignment: WrapAlignment.center,
       children: buttons,
     );
@@ -659,7 +845,7 @@ class _LandingScreenState extends State<LandingScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF0A0F18),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0x2255DD4A)),
+        border: Border.all(color: const Color(0x2200CC8E)),
         boxShadow: const [
           BoxShadow(
             color: Color(0x33000000),
@@ -732,7 +918,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   else
                     const Center(
                       child: CircularProgressIndicator(
-                        color: Color(0xFF55DD4A),
+                        color: Color(0xFF00CC8E),
                       ),
                     ),
                 ],
@@ -890,7 +1076,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget _buildDownloadSection(bool isMobile) {
     final os = _detectedOS;
     return Container(
-      constraints: const BoxConstraints(maxWidth: 1280),
+      constraints: const BoxConstraints(maxWidth: 1040),
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
@@ -963,22 +1149,15 @@ class _LandingScreenState extends State<LandingScreen> {
         color: const Color(0xFF101722),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isPrimary ? const Color(0xFF55DD4A) : const Color(0x1FFFFFFF),
-          width: isPrimary ? 1.5 : 1.0,
+          color: const Color(0x1FFFFFFF),
+          width: 1.0,
         ),
-        boxShadow: [
-          if (isPrimary)
-            const BoxShadow(
-              color: Color(0x2E55DD4A),
-              blurRadius: 24,
-              offset: Offset(0, 8),
-            )
-          else
-            const BoxShadow(
-              color: Color(0x59000000),
-              blurRadius: 16,
-              offset: Offset(0, 8),
-            ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x59000000),
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
         ],
       ),
       child: Column(
@@ -1005,13 +1184,12 @@ class _LandingScreenState extends State<LandingScreen> {
           ElevatedButton(
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
-              backgroundColor: isPrimary ? const Color(0xFF55DD4A) : const Color(0xFF1A2536),
-              minimumSize: const Size(double.infinity, 48),
-              elevation: isPrimary ? 4 : 0,
+              backgroundColor: isPrimary ? const Color(0xFF00CC8E) : const Color(0xFF1A2536),
+              minimumSize: const Size(double.infinity, 54),
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              elevation: 0,
               side: isPrimary ? BorderSide.none : const BorderSide(color: Color(0x33FFFFFF)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              shape: const StadiumBorder(),
             ),
             child: Text(
               btnText,
@@ -1031,15 +1209,20 @@ class _LandingScreenState extends State<LandingScreen> {
   // ---------------------------------------------------------------------------
   Widget _buildFooter() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 40),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Color(0x1FFFFFFF))),
+        color: Color(0xFF04060A),
+        border: Border(
+          top: BorderSide(color: Color(0x1FFFFFFF), width: 1),
+        ),
       ),
       child: Center(
         child: Text(
           '© WhisperCue. All rights reserved. Open-source high-performance desktop assistant.',
+          textAlign: TextAlign.center,
           style: WhisperCueLandingApp.graphikStyle(
-            color: const Color(0xFF94A3B8),
+            color: const Color(0xFF64748B),
             fontSize: 14,
           ),
         ),

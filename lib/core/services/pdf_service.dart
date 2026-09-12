@@ -10,14 +10,16 @@ class PdfService {
     try {
       String? filePath;
 
+      final isMac = !kIsWeb && Platform.isMacOS;
+
       // On macOS, use osascript native panel to avoid Flutter engine embedder handle crashes
       // caused by third-party file_picker on frameless/alwaysOnTop windows.
-      if (Platform.isMacOS) {
+      if (isMac) {
         filePath = await _pickFileMacos();
       }
 
       // Fallback to FilePicker if osascript returned null or not on macOS
-      if ((filePath == null || filePath.isEmpty) && !Platform.isMacOS) {
+      if ((filePath == null || filePath.isEmpty) && !isMac) {
         final result = await FilePicker.platform.pickFiles(
           type: FileType.custom,
           allowedExtensions: ['pdf', 'txt'],

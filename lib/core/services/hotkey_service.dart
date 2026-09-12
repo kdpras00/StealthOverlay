@@ -26,7 +26,7 @@ class HotkeyService {
     try {
       await hotKeyManager.unregisterAll();
 
-      bool isMac = Platform.isMacOS;
+      bool isMac = _isMac;
 
       _panicHotKey = HotKey(
         key: PhysicalKeyboardKey.keyH,
@@ -157,19 +157,21 @@ class HotkeyService {
     }
   }
 
+  static bool get _isMac => !kIsWeb && Platform.isMacOS;
+
   static String get panicShortcutText {
     if (kIsWeb) return 'Ctrl+Shift+H';
-    return Platform.isMacOS ? '⌘⇧H' : 'Ctrl+Shift+H';
+    return _isMac ? '⌘⇧H' : 'Ctrl+Shift+H';
   }
 
   static String get stealthShortcutText {
     if (kIsWeb) return 'Ctrl+Shift+S';
-    return Platform.isMacOS ? '⌘⇧S' : 'Ctrl+Shift+S';
+    return _isMac ? '⌘⇧S' : 'Ctrl+Shift+S';
   }
 
-  static String get answerShortcutText => Platform.isMacOS ? '⌘↵' : 'Ctrl+Enter';
-  static String get screenshotShortcutText => Platform.isMacOS ? '⌘⇧C' : 'Ctrl+Shift+C';
-  static String get chatShortcutText => Platform.isMacOS ? '⌘K' : 'Ctrl+K';
-  static String get micShortcutText => Platform.isMacOS ? '⌘⇧M' : 'Ctrl+Shift+M';
-  static String get lockShortcutText => Platform.isMacOS ? '⌘⇧L' : 'Ctrl+Shift+L';
+  static String get answerShortcutText => _isMac ? '⌘↵' : 'Ctrl+Enter';
+  static String get screenshotShortcutText => _isMac ? '⌘⇧C' : 'Ctrl+Shift+C';
+  static String get chatShortcutText => _isMac ? '⌘K' : 'Ctrl+K';
+  static String get micShortcutText => _isMac ? '⌘⇧M' : 'Ctrl+Shift+M';
+  static String get lockShortcutText => _isMac ? '⌘⇧L' : 'Ctrl+Shift+L';
 }
