@@ -16,5 +16,5 @@ flutter config --no-analytics
 echo "=== Flutter Version ==="
 flutter --version
 
-echo "=== Building Flutter Web (PWA Service Worker Disabled for 206 Video Streaming) ==="
-flutter build web --release --pwa-strategy=none
+echo "=== Building Flutter Web (HTML Renderer & PWA Disabled) ==="
+flutter build web --release --web-renderer html --pwa-strategy=none
