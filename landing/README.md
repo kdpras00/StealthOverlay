@@ -1,16 +1,25 @@
-# landing
+# WhisperCue Landing Page
 
-A new Flutter project.
+Marketing/download site for WhisperCue, built with Flutter web.
 
-## Getting Started
+## Run Locally
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+flutter run -d chrome
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Build
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+flutter build web --no-web-resources-cdn
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Output goes to `build/web/`.
+
+## Conventions
+
+- **Fonts**: Deacon for large headings (`deaconStyle`), Graphik for body/small text (`graphikStyle`). Fonts load only via `pubspec.yaml` — do not add `@font-face` rules to `web/index.html` (duplicate loading causes fallback warnings).
+- **Download buttons**: navbar, hero, and cards auto-highlight the visitor's OS (`UserOS`) with the green primary style. All buttons link to the latest GitHub Release assets.
+- **Favicon/PWA icons** (`web/favicon.png`, `web/icons/`): generated from `assets/icons/logo.webp`. Bump the `?v=N` query in `index.html` after regenerating so browsers drop the cached icon.
+- **Tests**: `flutter test` (font mapping), `flutter analyze`.

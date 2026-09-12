@@ -2,8 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Sandbox disabled: app is distributed outside the App Store (ad-hoc signed).
+	     Sandbox + ad-hoc signature deadlocks the Flutter embedder during launch
+	     (hang in nib-load window ordering, 0 windows, engine never reaches Dart).
+	     The app also requires non-sandboxed operation: global system hotkeys,
+	     osascript file picker, window sharing-type control, local HTTP/WebSocket servers. -->
 	<key>com.apple.security.app-sandbox</key>
-	<true/>
+	<false/>
 	<key>com.apple.security.network.server</key>
 	<true/>
 	<key>com.apple.security.network.client</key>
