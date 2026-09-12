@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stealth_overlay/core/models/sticky_note.dart';
-import 'package:stealth_overlay/core/models/settings.dart';
+import 'package:whisper_cue/core/models/sticky_note.dart';
+import 'package:whisper_cue/core/models/settings.dart';
 
 void main() {
   group('StickyNote Model Tests', () {

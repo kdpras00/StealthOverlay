@@ -83,7 +83,7 @@ class WebSocketBridgeService {
       // Serve a simple health check for non-WebSocket requests
       request.response.statusCode = HttpStatus.ok;
       request.response.write(jsonEncode({
-        'service': 'StealthOverlay WebSocket Bridge',
+        'service': 'WhisperCue WebSocket Bridge',
         'clients': _clients.length,
         'status': 'online',
       }));

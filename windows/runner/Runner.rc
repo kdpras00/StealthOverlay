@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.stealthai" "\0"
-            VALUE "FileDescription", "stealth_overlay" "\0"
+            VALUE "CompanyName", "Stealth AI" "\0"
+            VALUE "FileDescription", "WhisperCue" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "stealth_overlay" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.stealthai. All rights reserved." "\0"
-            VALUE "OriginalFilename", "stealth_overlay.exe" "\0"
-            VALUE "ProductName", "stealth_overlay" "\0"
+            VALUE "InternalName", "whisper_cue" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Stealth AI. All rights reserved." "\0"
+            VALUE "OriginalFilename", "whisper_cue.exe" "\0"
+            VALUE "ProductName", "WhisperCue" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

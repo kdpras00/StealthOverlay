@@ -25,6 +25,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/videos/
+    - assets/fonts/
 
   fonts:
     - family: Graphik
@@ -41,3 +42,5 @@ flutter:
           weight: 400
         - asset: assets/fonts/Deacon-Bold.otf
           weight: 700
+        - asset: assets/fonts/Deacon-Black.otf
+          weight: 900

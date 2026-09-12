@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=WhisperCue
+Comment=Invisible AI Desktop Overlay Assistant
+Exec=/opt/whispercue/whisper_cue %U
+Icon=whispercue
+Terminal=false
+Categories=Utility;Office;
+StartupWMClass=whisper_cue

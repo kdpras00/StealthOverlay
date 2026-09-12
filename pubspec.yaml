@@ -34,6 +34,25 @@ flutter:
 
   assets:
     - assets/icons/
+    - assets/fonts/
+
+  fonts:
+    - family: Graphik
+      fonts:
+        - asset: assets/fonts/Graphik-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Graphik-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Graphik-Bold.otf
+          weight: 700
+    - family: Deacon
+      fonts:
+        - asset: assets/fonts/Deacon-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Deacon-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Deacon-Black.otf
+          weight: 900
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

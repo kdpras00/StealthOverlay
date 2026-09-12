@@ -40,19 +40,19 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (_) => OverlayProvider(),
-      child: const StealthOverlayApp(),
+      child: const WhisperCueApp(),
     ),
   );
 }
 
-class StealthOverlayApp extends StatefulWidget {
-  const StealthOverlayApp({super.key});
+class WhisperCueApp extends StatefulWidget {
+  const WhisperCueApp({super.key});
 
   @override
-  State<StealthOverlayApp> createState() => _StealthOverlayAppState();
+  State<WhisperCueApp> createState() => _WhisperCueAppState();
 }
 
-class _StealthOverlayAppState extends State<StealthOverlayApp> {
+class _WhisperCueAppState extends State<WhisperCueApp> {
   @override
   void initState() {
     super.initState();

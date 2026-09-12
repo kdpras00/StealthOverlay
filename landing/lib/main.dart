@@ -21,9 +21,8 @@ class WhisperCueLandingApp extends StatelessWidget {
   }) {
     return TextStyle(
       fontFamily: 'Deacon',
-      fontFamilyFallback: const ['Graphik', 'sans-serif'],
       fontSize: fontSize,
-      fontWeight: fontWeight ?? FontWeight.w600,
+      fontWeight: fontWeight ?? FontWeight.bold,
       letterSpacing: letterSpacing,
       color: color ?? const Color(0xFFF3EDE4),
       height: height,
@@ -53,7 +52,8 @@ class WhisperCueLandingApp extends StatelessWidget {
     return MaterialApp(
       title: 'WhisperCue — Invisible AI Desktop Overlay Assistant',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
+      theme: ThemeData(
+        brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF06090E),
         colorScheme: const ColorScheme.dark(
           primary: Color(0xFF55DD4A),
@@ -63,12 +63,12 @@ class WhisperCueLandingApp extends StatelessWidget {
           onSurface: Color(0xFFF3EDE4),
         ),
         textTheme: TextTheme(
-          displayLarge: graphikStyle(
+          displayLarge: deaconStyle(
             fontSize: 56.0,
             fontWeight: FontWeight.bold,
             letterSpacing: -1.2,
           ),
-          headlineMedium: graphikStyle(
+          headlineMedium: deaconStyle(
             fontSize: 36.0,
             fontWeight: FontWeight.bold,
             letterSpacing: -0.5,
@@ -82,9 +82,13 @@ class WhisperCueLandingApp extends StatelessWidget {
             fontSize: 15.0,
             height: 1.5,
           ),
-          labelSmall: deaconStyle(
+          labelLarge: graphikStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ),
+          labelSmall: graphikStyle(
             fontSize: 12.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
           ),
         ),
@@ -150,25 +154,25 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
-  IconData get _primaryDownloadIcon {
+  String get _primaryDownloadIconAsset {
     switch (_detectedOS) {
       case UserOS.windows:
-        return Icons.window_rounded;
+        return 'assets/icons/windows.webp';
       case UserOS.linux:
-        return Icons.terminal_rounded;
+        return 'assets/icons/linux-platform.webp';
       case UserOS.macOS:
-        return Icons.apple_rounded;
+        return 'assets/icons/mac-os-logo.webp';
     }
   }
 
   VoidCallback get _primaryDownloadAction {
     switch (_detectedOS) {
       case UserOS.windows:
-        return () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip');
+        return () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Windows.zip');
       case UserOS.linux:
-        return () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz');
+        return () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Linux.tar.gz');
       case UserOS.macOS:
-        return () => _launchDownloadUrl('dist/macos/WhisperCue-macOS.dmg');
+        return () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip');
     }
   }
 
@@ -177,6 +181,25 @@ class _LandingScreenState extends State<LandingScreen> {
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       debugPrint('Could not launch $url');
     }
+  }
+
+  /// Platform icon with correct contrast:
+  /// - [onGreen] = true → black icon on green primary button (visible).
+  /// - [onGreen] = false → white-tinted icon on dark card/secondary button.
+  /// Aset webp bawaan berwarna hitam sehingga harus di-tint putih di atas
+  /// background gelap agar terlihat.
+  Widget _platformIcon(String asset, double size, {required bool onGreen}) {
+    if (onGreen) {
+      return Image.asset(asset, width: size, height: size, fit: BoxFit.contain);
+    }
+    return Image.asset(
+      asset,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      color: const Color(0xFFF3EDE4),
+      colorBlendMode: BlendMode.srcIn,
+    );
   }
 
   void _showBuildGuideDialog(String platformName, String commands) {
@@ -192,6 +215,7 @@ class _LandingScreenState extends State<LandingScreen> {
           '$platformName Setup & Build Guide',
           style: WhisperCueLandingApp.deaconStyle(
             fontSize: 20,
+            fontWeight: FontWeight.bold,
             color: const Color(0xFFF3EDE4),
           ),
         ),
@@ -361,7 +385,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: const DecorationImage(
-                    image: AssetImage('assets/icons/logo.png'),
+                    image: AssetImage('assets/icons/logo.webp'),
                     fit: BoxFit.cover,
                   ),
                   boxShadow: [
@@ -393,7 +417,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
           ElevatedButton.icon(
             onPressed: _primaryDownloadAction,
-            icon: Icon(_primaryDownloadIcon, size: 18, color: const Color(0xFF0A1A08)),
+            icon: Image.asset(_primaryDownloadIconAsset, width: 18, height: 18),
             label: Text(
               _primaryDownloadLabel,
               style: WhisperCueLandingApp.graphikStyle(
@@ -406,7 +430,7 @@ class _LandingScreenState extends State<LandingScreen> {
               backgroundColor: const Color(0xFF55DD4A),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(8),
               ),
               elevation: 4,
             ),
@@ -479,8 +503,8 @@ class _LandingScreenState extends State<LandingScreen> {
     Widget macButton({bool isPrimary = false}) {
       if (isPrimary) {
         return ElevatedButton.icon(
-          onPressed: () => _launchDownloadUrl('dist/macos/WhisperCue-macOS.dmg'),
-          icon: const Icon(Icons.apple_rounded, color: Color(0xFF0A1A08)),
+          onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip'),
+          icon: _platformIcon('assets/icons/mac-os-logo.webp', 20, onGreen: true),
           label: Text(
             'Download macOS',
             style: WhisperCueLandingApp.graphikStyle(
@@ -491,16 +515,16 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF55DD4A),
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
             ),
           ),
         );
       }
       return OutlinedButton.icon(
-        onPressed: () => _launchDownloadUrl('dist/macos/WhisperCue-macOS.dmg'),
-        icon: const Icon(Icons.apple_rounded, size: 18, color: Color(0xFFF3EDE4)),
+        onPressed: () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip'),
+        icon: _platformIcon('assets/icons/mac-os-logo.webp', 20, onGreen: false),
         label: Text(
           'Download macOS',
           style: WhisperCueLandingApp.graphikStyle(
@@ -510,21 +534,22 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ),
         style: OutlinedButton.styleFrom(
+          backgroundColor: const Color(0xFF101722),
           side: const BorderSide(color: Color(0x33FFFFFF)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       );
     }
 
     Widget windowsButton({bool isPrimary = false}) {
-      final action = () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip');
+      final action = () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Windows.zip');
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
-          icon: const Icon(Icons.window_rounded, color: Color(0xFF0A1A08)),
+          icon: _platformIcon('assets/icons/windows.webp', 20, onGreen: true),
           label: Text(
             'Download Windows',
             style: WhisperCueLandingApp.graphikStyle(
@@ -535,16 +560,16 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF55DD4A),
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
             ),
           ),
         );
       }
       return OutlinedButton.icon(
         onPressed: action,
-        icon: const Icon(Icons.window_rounded, size: 18, color: Color(0xFF73D3EB)),
+        icon: _platformIcon('assets/icons/windows.webp', 20, onGreen: false),
         label: Text(
           'Download Windows',
           style: WhisperCueLandingApp.graphikStyle(
@@ -554,21 +579,22 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ),
         style: OutlinedButton.styleFrom(
+          backgroundColor: const Color(0xFF101722),
           side: const BorderSide(color: Color(0x33FFFFFF)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       );
     }
 
     Widget linuxButton({bool isPrimary = false}) {
-      final action = () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz');
+      final action = () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Linux.tar.gz');
       if (isPrimary) {
         return ElevatedButton.icon(
           onPressed: action,
-          icon: const Icon(Icons.terminal_rounded, color: Color(0xFF0A1A08)),
+          icon: _platformIcon('assets/icons/linux-platform.webp', 20, onGreen: true),
           label: Text(
             'Download Linux',
             style: WhisperCueLandingApp.graphikStyle(
@@ -579,16 +605,16 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF55DD4A),
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
             ),
           ),
         );
       }
       return OutlinedButton.icon(
         onPressed: action,
-        icon: const Icon(Icons.terminal_rounded, size: 18, color: Color(0xFF55DD4A)),
+        icon: _platformIcon('assets/icons/linux-platform.webp', 20, onGreen: false),
         label: Text(
           'Download Linux',
           style: WhisperCueLandingApp.graphikStyle(
@@ -598,10 +624,11 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ),
         style: OutlinedButton.styleFrom(
+          backgroundColor: const Color(0xFF101722),
           side: const BorderSide(color: Color(0x33FFFFFF)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       );
@@ -766,7 +793,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         style: WhisperCueLandingApp.deaconStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF55DD4A),
+                          color: const Color(0xFFF3EDE4),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -889,29 +916,29 @@ class _LandingScreenState extends State<LandingScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildDownloadCard(
-                '🍏',
+                'assets/icons/mac-os-logo.webp',
                 'macOS',
                 'macOS 11+ (Intel & Apple Silicon)',
                 'Download macOS',
-                () => _launchDownloadUrl('dist/macos/WhisperCue-macOS.dmg'),
+                () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-macOS.zip'),
                 isPrimary: os == UserOS.macOS,
               ),
               const SizedBox(width: 24, height: 24),
               _buildDownloadCard(
-                '🪟',
+                'assets/icons/windows.webp',
                 'Windows',
                 'Windows 10 & 11 (64-bit)',
                 'Download Windows',
-                () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Windows.zip'),
+                () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Windows.zip'),
                 isPrimary: os == UserOS.windows,
               ),
               const SizedBox(width: 24, height: 24),
               _buildDownloadCard(
-                '🐧',
+                'assets/icons/linux-platform.webp',
                 'Linux',
                 'Ubuntu / Debian / Arch',
                 'Download Linux',
-                () => _launchDownloadUrl('https://github.com/kdpras00/WhisperCue/releases/latest/download/WhisperCue-Linux.tar.gz'),
+                () => _launchDownloadUrl('https://github.com/kdpras00/StealthOverlay/releases/latest/download/WhisperCue-Linux.tar.gz'),
                 isPrimary: os == UserOS.linux,
               ),
             ],
@@ -922,7 +949,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget _buildDownloadCard(
-    String icon,
+    String iconAsset,
     String title,
     String subtitle,
     String btnText,
@@ -939,10 +966,24 @@ class _LandingScreenState extends State<LandingScreen> {
           color: isPrimary ? const Color(0xFF55DD4A) : const Color(0x1FFFFFFF),
           width: isPrimary ? 1.5 : 1.0,
         ),
+        boxShadow: [
+          if (isPrimary)
+            const BoxShadow(
+              color: Color(0x2E55DD4A),
+              blurRadius: 24,
+              offset: Offset(0, 8),
+            )
+          else
+            const BoxShadow(
+              color: Color(0x59000000),
+              blurRadius: 16,
+              offset: Offset(0, 8),
+            ),
+        ],
       ),
       child: Column(
         children: [
-          Text(icon, style: const TextStyle(fontSize: 48)),
+          _platformIcon(iconAsset, 48, onGreen: false),
           const SizedBox(height: 16),
           Text(
             title,
@@ -964,10 +1005,12 @@ class _LandingScreenState extends State<LandingScreen> {
           ElevatedButton(
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
-              backgroundColor: isPrimary ? const Color(0xFF55DD4A) : const Color(0xFF202D3F),
+              backgroundColor: isPrimary ? const Color(0xFF55DD4A) : const Color(0xFF1A2536),
               minimumSize: const Size(double.infinity, 48),
+              elevation: isPrimary ? 4 : 0,
+              side: isPrimary ? BorderSide.none : const BorderSide(color: Color(0x33FFFFFF)),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: Text(
@@ -994,7 +1037,7 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
       child: Center(
         child: Text(
-          '© 2026 WhisperCue. All rights reserved. Open-source high-performance desktop assistant.',
+          '© WhisperCue. All rights reserved. Open-source high-performance desktop assistant.',
           style: WhisperCueLandingApp.graphikStyle(
             color: const Color(0xFF94A3B8),
             fontSize: 14,

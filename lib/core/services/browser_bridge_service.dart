@@ -107,7 +107,7 @@ class BrowserBridgeService {
           request.response.statusCode = HttpStatus.ok;
           request.response.write(jsonEncode({
             'status': 'online',
-            'service': 'StealthOverlay',
+            'service': 'WhisperCue',
             'visible': _isOverlayVisible,
           }));
         } else {
