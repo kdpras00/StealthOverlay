@@ -1,10 +1,13 @@
 #!/bin/bash
 set -e
 
+# Fix git safe directory ownership issue in CI containers (prevents exit code 128)
+git config --global --add safe.directory '*' || true
+
 # Install Flutter SDK on Vercel build environment if not cached
 if [ ! -d "$HOME/flutter" ]; then
   echo "=== Downloading Flutter SDK ==="
-  curl -sSL https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.29.0-stable.tar.xz | tar -xJ -C $HOME
+  curl -fsSL https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.29.0-stable.tar.xz | tar -xJ -C $HOME
 fi
 
 export PATH="$HOME/flutter/bin:$PATH"
